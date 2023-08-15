@@ -7,10 +7,8 @@ class PlaylistsService {
 
   async getPlaylistSongsById(playlistId) {
     const queryPlaylistDetail = {
-      text: `SELECT p.id, p.name, u.username
+      text: `SELECT p.id, p.name
       FROM playlists as p
-      LEFT JOIN users as u
-      ON u.id = p.owner
       WHERE p.id = $1`,
       values: [playlistId],
     };
@@ -30,13 +28,17 @@ class PlaylistsService {
     let finalResult = {};
     if (result2.rows.length) {
       finalResult = {
-        ...result1.rows[0],
-        songs: [...result2.rows],
+        playlist: {
+          ...result1.rows[0],
+          songs: [...result2.rows],
+        }
       };
     } else {
       finalResult = {
-        ...result1.rows[0],
-        songs: [''],
+        playlist: {
+          ...result1.rows[0],
+          songs: [''],
+        }
       };
     }
 
